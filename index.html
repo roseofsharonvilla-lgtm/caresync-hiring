@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>CareSync Hiring Dashboard — Rose of Sharon Senior Villa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1B2A4A;--navy2:#2C3E66;--gold:#C9A54C;--gold-soft:#F3E9CF;--gold-ink:#7A5A12;--green:#2E6B4F;--green-soft:#DCEBE3;--red:#A23B3B;--red-soft:#F4DCDC;--cream:#F7F4EC;--ink:#1F2933;--muted:#6B7280;--line:#E5E1D6;--c1:#3B5FB5;--c2:#B8862B;--card:#fff}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Poppins,system-ui,sans-serif;background:var(--cream);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.hide{display:none!important}
+.gate{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 10%,#2C3E66 0,#1B2A4A 55%)}
+.gate-card{width:100%;max-width:400px;background:#fff;border-radius:20px;padding:34px 30px;box-shadow:0 30px 60px rgba(0,0,0,.3);border-top:6px solid var(--gold)}
+.gate-card small{color:var(--gold);font-weight:700;letter-spacing:3px;font-size:11px}
+.gate-card h1{margin:6px 0 4px;font-size:26px;color:var(--navy)}
+.gate-card p{margin:0 0 20px;color:var(--muted)}
+.field{display:block;margin-bottom:14px}
+.field span{display:block;font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1.5px solid #DDD7C8;border-radius:10px;background:#fff;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}
+.btn{border:0;border-radius:10px;padding:11px 18px;font-weight:600;display:inline-flex;align-items:center;gap:8px;justify-content:center;transition:transform .08s,filter .15s}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-green{background:var(--green);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn-soft{background:#EEF1F7;color:var(--navy)}
+.btn-danger{background:var(--red-soft);color:var(--red)}
+.btn:disabled{opacity:.6;cursor:wait}
+.err{color:var(--red);font-size:13px;min-height:18px;margin-top:8px}
+header{background:var(--navy);color:#fff;border-bottom:5px solid var(--gold)}
+.hwrap{max-width:1280px;margin:0 auto;padding:22px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hwrap .t{flex:1;min-width:240px}
+.hwrap small{color:var(--gold);font-weight:700;letter-spacing:3px;font-size:11px}
+.hwrap h1{margin:2px 0 0;font-size:26px;font-weight:800}
+.hwrap .sub{color:#E4CE96;font-size:13px}
+.hbtns{display:flex;gap:8px;flex-wrap:wrap}
+main{max-width:1280px;margin:0 auto;padding:22px 24px 60px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.tile{border:0;text-align:left;border-radius:16px;padding:16px 18px 18px;color:#fff;position:relative;overflow:hidden;box-shadow:0 6px 16px rgba(27,42,74,.12);transition:transform .12s,box-shadow .12s;outline-offset:3px}
+.tile:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(27,42,74,.2)}
+.tile.on{outline:3px solid var(--gold)}
+.tile .l{font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--gold-soft)}
+.tile .n{font-size:44px;font-weight:800;line-height:1.1;margin-top:6px}
+.tile .h{font-size:11px;color:rgba(255,255,255,.75)}
+.tile::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.07)}
+.grid3{display:grid;grid-template-columns:1.3fr 1fr 1.3fr;gap:14px;margin-top:18px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.panel h2{margin:0 0 14px;font-size:15px;color:var(--navy);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.panel h2 span{font-size:12px;color:var(--muted);font-weight:500}
+.bars{display:flex;flex-direction:column;gap:7px}
+.bar-row{display:grid;grid-template-columns:120px 1fr 28px;align-items:center;gap:10px;font-size:12px;cursor:pointer;border-radius:6px;padding:2px 0}
+.bar-row:hover{background:#F6F7FA}
+.bar-row .lab{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-row .val{color:var(--muted);text-align:right;font-weight:600}
+.track{height:12px;background:#F1EFE8;border-radius:0 4px 4px 0;position:relative}
+.fill{height:100%;border-radius:0 4px 4px 0;background:var(--c1);min-width:0}
+.pair .track{height:9px}
+.pair .fill+.fill{margin-top:2px}
+.donut-wrap{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap}
+.legend{display:flex;flex-direction:column;gap:8px;font-size:13px}
+.legend .k{display:flex;align-items:center;gap:8px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.legend-row{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-bottom:10px}
+.legend-row .k{display:flex;align-items:center;gap:6px}
+.need-row{display:grid;grid-template-columns:150px 1fr 54px;gap:10px;align-items:center;font-size:12px;margin-bottom:9px}
+.need-row .lab{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.need-row .val{text-align:right;color:var(--muted);font-weight:600}
+.empty{color:var(--muted);font-size:13px;padding:10px 0}
+.listhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:26px 0 12px}
+.listhead h2{margin:0;font-size:20px;color:var(--navy);flex:1;min-width:200px}
+.chip{background:var(--gold-soft);color:var(--gold-ink);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;display:inline-flex;gap:6px;align-items:center}
+.chip button{border:0;background:none;color:inherit;font-weight:700;padding:0 2px}
+.controls{display:flex;gap:8px;flex-wrap:wrap}
+.controls input,.controls select{padding:9px 12px;border:1.5px solid #DDD7C8;border-radius:10px;background:#fff}
+.controls input{width:220px}
+.apps{display:flex;flex-direction:column;gap:10px}
+.app{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:1.6fr 1fr auto;gap:14px;align-items:center}
+.app .nm{font-weight:700;color:var(--navy);font-size:15px}
+.app .meta{color:var(--muted);font-size:12px}
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#EEF1F7;color:var(--navy)}
+.pill.New{background:var(--gold-soft);color:var(--gold-ink)}
+.pill.Hired{background:var(--green-soft);color:var(--green)}
+.pill.Not-Hired{background:var(--red-soft);color:var(--red)}
+.pill.Withdrawn{background:#ECECEC;color:var(--muted)}
+.acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.acts .btn{padding:8px 12px;font-size:12px;border-radius:9px}
+.more{grid-column:1/-1;border-top:1px dashed var(--line);padding-top:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.more .field{margin:0}
+.more .field select{padding:8px 10px}
+.more .info{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px 16px;font-size:12px}
+.more .info b{color:var(--muted);font-weight:500;display:block;font-size:11px}
+.notes{grid-column:1/-1;font-size:12px;color:var(--muted);background:var(--cream);border-radius:8px;padding:8px 10px}
+.modal{position:fixed;inset:0;background:rgba(17,24,39,.55);display:grid;place-items:center;padding:16px;z-index:50}
+.sheet{background:#fff;border-radius:18px;width:100%;max-width:640px;max-height:92vh;overflow:auto;box-shadow:0 30px 60px rgba(0,0,0,.35)}
+.sheet-h{background:var(--navy);color:#fff;padding:18px 22px;border-bottom:4px solid var(--gold);display:flex;align-items:flex-start;gap:12px;position:sticky;top:0;z-index:1}
+.sheet-h h3{margin:0;font-size:18px}
+.sheet-h p{margin:2px 0 0;color:#E4CE96;font-size:12px}
+.sheet-h .x{margin-left:auto;background:none;border:0;color:#fff;font-size:24px;line-height:1}
+.sheet-b{padding:18px 22px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.check{display:flex;gap:8px;align-items:center;font-size:13px;margin:-4px 0 14px}
+.field textarea{min-height:240px;line-height:1.5;resize:vertical}
+.hint{font-size:12px;color:var(--muted);margin:-8px 0 14px}
+.sheet-f{padding:0 22px 20px;display:flex;gap:10px;justify-content:flex-end}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:60;max-width:90vw;font-size:13px;border-left:5px solid var(--gold)}
+.toast.bad{border-left-color:#E07070}
+.tip{position:fixed;pointer-events:none;background:var(--navy);color:#fff;font-size:12px;padding:6px 10px;border-radius:8px;z-index:70;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+.loading{opacity:.55;pointer-events:none}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 0 30px}
+@media(max-width:1000px){.tiles{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:1fr}.app{grid-template-columns:1fr}.acts{justify-content:flex-start}.more{grid-template-columns:1fr 1fr}.more .info{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.tile .n{font-size:36px}.row2{grid-template-columns:1fr}.controls input{width:100%}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <form class="gate-card" id="gateForm">
+    <small>CARESYNC HIRING</small>
+    <h1>Hiring Dashboard</h1>
+    <p>Rose of Sharon Senior Villa</p>
+    <label class="field"><span>Your Name</span><input id="gName" autocomplete="name" placeholder="First and last name" required></label>
+    <label class="field"><span>Passcode</span><input id="gPass" type="password" autocomplete="current-password" required></label>
+    <button class="btn btn-primary" style="width:100%" id="gBtn">Open Dashboard</button>
+    <div class="err" id="gErr"></div>
+  </form>
+</div>
+
+<div id="app" class="hide">
+  <header>
+    <div class="hwrap">
+      <div class="t">
+        <small>CARESYNC HIRING COMMAND CENTER</small>
+        <h1>Rose of Sharon Senior Villa</h1>
+        <div class="sub" id="sub">When We Care… They Care.</div>
+      </div>
+      <div class="hbtns">
+        <button class="btn btn-gold" id="refreshBtn">↻ Refresh</button>
+        <a class="btn btn-ghost" id="sheetLink" target="_blank" rel="noopener" style="text-decoration:none">Open Sheet</a>
+        <button class="btn btn-ghost" id="outBtn">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="tiles" id="tiles"></section>
+
+    <section class="grid3">
+      <div class="panel"><h2>Hiring Pipeline <span>click a bar to filter</span></h2><div class="bars" id="pipe"></div></div>
+      <div class="panel"><h2>Applicants by Program</h2><div class="donut-wrap" id="donut"></div></div>
+      <div class="panel" id="needsPanel"><h2>Staffing: Needed vs. Hired</h2>
+        <div class="legend-row"><span class="k"><i class="sw" style="background:var(--c2)"></i>Needed</span><span class="k"><i class="sw" style="background:var(--c1)"></i>Hired</span></div>
+        <div id="needs"></div>
+      </div>
+    </section>
+
+    <div class="listhead">
+      <h2 id="listTitle">All Applicants</h2>
+      <span class="chip hide" id="chip"><span id="chipTxt"></span><button id="chipX" aria-label="Clear filter">✕</button></span>
+      <div class="controls">
+        <input id="q" placeholder="Search name, position, email…">
+        <select id="prog"><option value="">All programs</option></select>
+      </div>
+    </div>
+    <section class="apps" id="apps"></section>
+  </main>
+  <footer>CareSync Hiring · Rose of Sharon Senior Villa · Data lives in your Google Sheet</footer>
+</div>
+
+<div class="modal hide" id="modal">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="sheet-h"><div><h3 id="mTitle">Email Applicant</h3><p id="mSub"></p></div><button class="x" id="mClose" aria-label="Close">×</button></div>
+    <div class="sheet-b">
+      <label class="field"><span>Template</span><select id="mTpl"></select></label>
+      <div class="hint" id="mWhen"></div>
+      <div id="mIv">
+        <div class="row2">
+          <label class="field"><span>Interview Date</span><input type="date" id="mDate"></label>
+          <label class="field"><span>Interview Time</span><input type="time" id="mTime" value="10:00"></label>
+        </div>
+        <label class="field"><span>Location</span><input id="mLoc"></label>
+        <label class="check"><input type="checkbox" id="mCal" checked> Add it to the facility Google Calendar</label>
+      </div>
+      <div id="mSd"><label class="field"><span>Start Date</span><input type="date" id="mStart"></label></div>
+      <label class="field"><span>Subject</span><input id="mSubj"></label>
+      <label class="field"><span>Message (you can edit anything)</span><textarea id="mBody"></textarea></label>
+      <label class="field"><span>After sending, set status to</span><select id="mStatus"></select></label>
+    </div>
+    <div class="sheet-f"><button class="btn btn-soft" id="mCancel">Cancel</button><button class="btn btn-green" id="mSend">Send Email</button></div>
+  </div>
+</div>
+
+<div class="tip hide" id="tip"></div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbwLdDg-zdps_4HEiBZG3zX2ytQxsSOCEzvbeENXxq7sow9oGn0H6ebBcqdLKk1hncwhjA/exec';
+const $ = id => document.getElementById(id);
+const S = { data: null, filter: '', q: '', prog: '', open: {}, cur: null };
+const store = {
+  get(k){ try { return sessionStorage.getItem(k) || localStorage.getItem(k) || ''; } catch(e){ return ''; } },
+  set(k,v,keep){ try { (keep ? localStorage : sessionStorage).setItem(k,v); } catch(e){} },
+  del(k){ try { sessionStorage.removeItem(k); localStorage.removeItem(k); } catch(e){} }
+};
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fullName = a => [a.first, a.last].filter(Boolean).join(' ');
+
+async function call(action, extra){
+  const res = await fetch(API, { method:'POST', body: JSON.stringify(Object.assign({ action, pass: store.get('hc_pass') }, extra || {})) });
+  const j = await res.json();
+  if (!j.ok) throw new Error(j.error || 'Something went wrong.');
+  return j;
+}
+
+function toast(msg, bad){
+  const t = document.createElement('div');
+  t.className = 'toast' + (bad ? ' bad' : '');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), bad ? 6000 : 4000);
+}
+
+const TILES = [
+  { k:'all', l:'TOTAL APPLICANTS', h:'Everyone who applied', bg:'#1B2A4A', f: a => true },
+  { k:'week', l:'NEW THIS WEEK', h:'Applied in the last 7 days', bg:'#2C3E66', f: a => a.applied && (Date.now() - new Date(a.applied + 'T12:00')) <= 7*864e5 },
+  { k:'new', l:'AWAITING REVIEW', h:'Status is New', bg:'#B08A2E', f: a => a.status === 'New' },
+  { k:'iv', l:'INTERVIEWS SET', h:'Interview scheduled', bg:'#2C3E66', f: a => a.status === 'Interview Scheduled' },
+  { k:'hireable', l:'HIREABLE', h:'Marked hireable', bg:'#2E6B4F', f: a => a.hireable === 'Hireable' },
+  { k:'bg', l:'BACKGROUND PASSED', h:'Background check passed', bg:'#2E6B4F', f: a => a.background === 'Passed' },
+  { k:'hired', l:'HIRED', h:'Welcome to the team', bg:'#1F5A40', f: a => a.status === 'Hired' },
+  { k:'open', l:'OPENINGS STILL NEEDED', h:'See staffing needs', bg:'#A23B3B', f: null }
+];
+
+function render(){
+  const d = S.data;
+  $('sub').textContent = 'When We Care… They Care.  ·  Updated ' + d.updated + '  ·  Signed in as ' + store.get('hc_name');
+  $('sheetLink').href = d.sheetUrl;
+  const apps = d.applicants;
+  const openings = d.needs.reduce((s, n) => s + n.still, 0);
+  $('tiles').innerHTML = TILES.map(t => {
+    const n = t.f ? apps.filter(t.f).length : openings;
+    return `<button class="tile ${S.filter === t.k ? 'on' : ''}" style="background:${t.bg}" data-k="${t.k}"><div class="l">${t.l}</div><div class="n">${n}</div><div class="h">${t.h}</div></button>`;
+  }).join('');
+  $('tiles').querySelectorAll('.tile').forEach(b => b.onclick = () => {
+    const k = b.dataset.k;
+    if (k === 'open') { $('needsPanel').scrollIntoView({ behavior:'smooth', block:'center' }); return; }
+    setFilter(S.filter === k || k === 'all' ? '' : k);
+  });
+  renderPipe(apps);
+  renderDonut(apps);
+  renderNeeds(d.needs);
+  const progs = [...new Set(apps.map(a => a.program).filter(Boolean))];
+  const sel = $('prog');
+  if (sel.options.length !== progs.length + 1) sel.innerHTML = '<option value="">All programs</option>' + progs.map(p => `<option>${esc(p)}</option>`).join('');
+  sel.value = S.prog;
+  renderList();
+}
+
+function renderPipe(apps){
+  const statuses = S.data.lists.Status;
+  const counts = statuses.map(s => [s, apps.filter(a => a.status === s).length]);
+  const max = Math.max(1, ...counts.map(c => c[1]));
+  $('pipe').innerHTML = counts.map(([s, n]) =>
+    `<div class="bar-row" data-s="${esc(s)}" data-tip="${esc(s)}: ${n} applicant${n === 1 ? '' : 's'}"><span class="lab">${esc(s)}</span><div class="track"><div class="fill" style="width:${n / max * 100}%"></div></div><span class="val">${n}</span></div>`
+  ).join('');
+  $('pipe').querySelectorAll('.bar-row').forEach(r => r.onclick = () => setFilter('status:' + r.dataset.s));
+}
+
+function renderDonut(apps){
+  const colors = ['#3B5FB5', '#B8862B'];
+  const progs = {};
+  apps.forEach(a => { const p = a.program || 'Other'; progs[p] = (progs[p] || 0) + 1; });
+  const keys = Object.keys(progs).sort();
+  const total = apps.length;
+  if (!total) { $('donut').innerHTML = '<div class="empty">No applicants yet.</div>'; return; }
+  const R = 62, C = 2 * Math.PI * R;
+  let off = 0;
+  const gap = keys.length > 1 ? 3 : 0;
+  const arcs = keys.map((k, i) => {
+    const len = progs[k] / total * C;
+    const seg = `<circle r="${R}" cx="80" cy="80" fill="none" stroke="${colors[i % 2]}" stroke-width="22" stroke-dasharray="${Math.max(0, len - gap)} ${C}" stroke-dashoffset="${-off}" transform="rotate(-90 80 80)" data-tip="${esc(k)}: ${progs[k]} (${Math.round(progs[k] / total * 100)}%)" style="cursor:pointer" data-p="${esc(k)}"></circle>`;
+    off += len;
+    return seg;
+  }).join('');
+  $('donut').innerHTML = `<svg width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="Applicants by program">${arcs}<text x="80" y="78" text-anchor="middle" font-size="30" font-weight="800" fill="#1B2A4A">${total}</text><text x="80" y="98" text-anchor="middle" font-size="11" fill="#6B7280">applicants</text></svg>` +
+    `<div class="legend">${keys.map((k, i) => `<div class="k"><i class="sw" style="background:${colors[i % 2]}"></i><span>${esc(k)} — <b>${progs[k]}</b></span></div>`).join('')}</div>`;
+  $('donut').querySelectorAll('circle').forEach(c => c.onclick = () => { S.prog = c.dataset.p; $('prog').value = S.prog; renderList(); });
+}
+
+function renderNeeds(needs){
+  if (!needs.length) { $('needs').innerHTML = '<div class="empty">Add how many people you need on the Staffing Needs tab of the sheet.</div>'; return; }
+  const max = Math.max(1, ...needs.map(n => n.needed));
+  $('needs').innerHTML = needs.map(n => {
+    const lab = n.position + (n.shift ? ' · ' + n.shift : '');
+    return `<div class="need-row pair" data-tip="${esc(lab)}: ${n.hired} hired of ${n.needed} needed"><span class="lab">${esc(lab)}</span><div><div class="track"><div class="fill" style="width:${n.needed / max * 100}%;background:var(--c2)"></div></div><div class="track" style="margin-top:2px"><div class="fill" style="width:${n.hired / max * 100}%;background:var(--c1)"></div></div></div><span class="val">${n.hired}/${n.needed}</span></div>`;
+  }).join('');
+}
+
+function setFilter(f){
+  S.filter = f;
+  render();
+  document.querySelector('.listhead').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function filtered(){
+  let list = S.data.applicants.slice();
+  if (S.filter.startsWith('status:')) { const s = S.filter.slice(7); list = list.filter(a => a.status === s); }
+  else if (S.filter) { const t = TILES.find(x => x.k === S.filter); if (t && t.f) list = list.filter(t.f); }
+  if (S.prog) list = list.filter(a => a.program === S.prog);
+  if (S.q) { const q = S.q.toLowerCase(); list = list.filter(a => [fullName(a), a.position, a.email, a.phone, a.id, a.city].join(' ').toLowerCase().includes(q)); }
+  return list;
+}
+
+function fmtDate(s){ if (!s) return ''; const d = new Date(s.length > 10 ? s : s + 'T12:00'); if (isNaN(d)) return s; return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); }
+function fmtDT(s){ if (!s) return ''; const d = new Date(s); if (isNaN(d)) return s; return d.toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' }); }
+
+function renderList(){
+  const label = S.filter.startsWith('status:') ? 'Status: ' + S.filter.slice(7) : (TILES.find(t => t.k === S.filter) || {}).l;
+  $('listTitle').textContent = S.filter ? cap(label) : 'All Applicants';
+  $('chip').classList.toggle('hide', !S.filter);
+  $('chipTxt').textContent = S.filter ? 'Filtered' : '';
+  const list = filtered();
+  if (!list.length) { $('apps').innerHTML = '<div class="panel empty">No applicants match this view.</div>'; return; }
+  const L = S.data.lists;
+  const sel = (a, field, key) => `<label class="field"><span>${field}</span><select data-row="${a.row}" data-id="${esc(a.id)}" data-field="${field}">${L[field].map(v => `<option ${a[key] === v ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select></label>`;
+  $('apps').innerHTML = list.map(a => {
+    const open = S.open[a.id];
+    return `<article class="app">
+      <div><div class="nm">${esc(fullName(a))}</div><div class="meta">${esc(a.position)} · ${esc(a.program)} · ${esc(a.id)}</div><div class="meta">${esc(a.email || 'No email')} · ${esc(a.phone)}</div></div>
+      <div><span class="pill ${esc((a.status || '').replace(/\s/g, '-'))}">${esc(a.status || 'No status')}</span><div class="meta" style="margin-top:5px">Applied ${esc(fmtDate(a.applied))}${a.interview ? ' · Interview ' + esc(fmtDT(a.interview)) : ''}</div></div>
+      <div class="acts">
+        <button class="btn btn-primary" data-act="Interview Invitation" data-id="${esc(a.id)}">📅 Invite to Interview</button>
+        <button class="btn btn-danger" data-act="Not Moving Forward" data-id="${esc(a.id)}">Not a Fit</button>
+        <button class="btn btn-soft" data-act="" data-id="${esc(a.id)}">✉ Other Email</button>
+        <button class="btn btn-soft" data-more="${esc(a.id)}">${open ? 'Less ▲' : 'Details ▼'}</button>
+      </div>
+      ${open ? `<div class="more">
+        <div class="info">
+          <div><b>City</b>${esc(a.city)}</div><div><b>Shifts Available</b>${esc(a.shifts)}</div><div><b>Available to Start</b>${esc(a.available)}</div>
+          <div><b>Most Recent Employer</b>${esc(a.employer)}</div><div><b>Assigned Shift</b>${esc(a.shift || '—')}</div><div><b>Start Date</b>${esc(fmtDate(a.start) || '—')}</div>
+        </div>
+        ${sel(a, 'Status', 'status')}${sel(a, 'Hireable', 'hireable')}${sel(a, 'Background Check', 'background')}${sel(a, 'Abuse Registry Check', 'registry')}
+        ${sel(a, 'Drug Screen', 'drug')}${sel(a, 'References Checked', 'refs')}${sel(a, 'Credentials Verified', 'creds')}
+        ${a.notes ? `<div class="notes">${esc(a.notes)}</div>` : ''}
+      </div>` : ''}
+    </article>`;
+  }).join('');
+  $('apps').querySelectorAll('[data-act]').forEach(b => b.onclick = () => openModal(b.dataset.id, b.dataset.act));
+  $('apps').querySelectorAll('[data-more]').forEach(b => b.onclick = () => { S.open[b.dataset.more] = !S.open[b.dataset.more]; renderList(); });
+  $('apps').querySelectorAll('select[data-field]').forEach(s => s.onchange = () => setField(s));
+}
+
+function cap(s){ return String(s || '').toLowerCase().replace(/\b\w/g, c => c.toUpperCase()); }
+
+async function setField(s){
+  const a = S.data.applicants.find(x => x.id === s.dataset.id);
+  s.disabled = true;
+  try {
+    const r = await call('field', { row: s.dataset.row, id: s.dataset.id, field: s.dataset.field, value: s.value });
+    toast(fullName(a) + ': ' + r.message);
+    await load(true);
+  } catch (e) { toast(e.message, true); s.disabled = false; }
+}
+
+function tplNeeds(t){
+  const txt = (t ? t.subject + t.message : '');
+  return { iv: /\{Interview (Date|Time)\}/.test(txt), sd: /\{Start Date\}/.test(txt) };
+}
+
+function fillText(text){
+  const a = S.cur || {};
+  const fd = s => s ? new Date(s + 'T12:00').toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }) : '';
+  const ft = s => { if (!s) return ''; const [h, m] = s.split(':').map(Number); return new Date(2000, 0, 1, h, m).toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' }); };
+  const map = {
+    'First Name': a.first, 'Last Name': a.last, 'Full Name': fullName(a), 'Position': a.position, 'Program': a.program,
+    'Interview Date': fd($('mDate').value), 'Interview Time': ft($('mTime').value), 'Interview Location': $('mLoc').value,
+    'Start Date': fd($('mStart').value), 'Sender Name': store.get('hc_name'), 'Facility': S.data.facility,
+    'Facility Phone': S.data.phone, 'Facility Address': S.data.address
+  };
+  return String(text || '').replace(/\{([^}]+)\}/g, (m, k) => map[k.trim()] ? map[k.trim()] : m);
+}
+
+let edited = { subj:false, body:false };
+function loadTpl(){
+  const t = S.data.templates.find(x => x.name === $('mTpl').value);
+  const need = tplNeeds(t);
+  $('mIv').classList.toggle('hide', !need.iv);
+  $('mSd').classList.toggle('hide', !need.sd);
+  $('mWhen').textContent = t && t.when ? 'Use when: ' + t.when : '';
+  $('mStatus').value = t ? t.status : '';
+  edited = { subj:false, body:false };
+  paint();
+}
+function paint(){
+  const t = S.data.templates.find(x => x.name === $('mTpl').value);
+  if (!t) return;
+  if (!edited.subj) $('mSubj').value = fillText(t.subject);
+  if (!edited.body) $('mBody').value = fillText(t.message);
+}
+
+function openModal(id, tplName){
+  const a = S.data.applicants.find(x => x.id === id);
+  if (!a) return;
+  S.cur = a;
+  $('mTitle').textContent = 'Email ' + fullName(a);
+  $('mSub').textContent = a.position + ' · ' + a.program + ' · ' + (a.email || 'No email on file');
+  $('mTpl').innerHTML = S.data.templates.map(t => `<option>${esc(t.name)}</option>`).join('');
+  $('mStatus').innerHTML = '<option value="">Leave status as is</option>' + S.data.lists.Status.map(s => `<option>${esc(s)}</option>`).join('');
+  $('mTpl').value = tplName && S.data.templates.some(t => t.name === tplName) ? tplName : S.data.templates[0].name;
+  const tm = new Date(Date.now() + 864e5);
+  $('mDate').value = tm.toISOString().slice(0, 10);
+  $('mLoc').value = S.data.facility + ', ' + S.data.address;
+  $('mStart').value = '';
+  loadTpl();
+  $('modal').classList.remove('hide');
+}
+function closeModal(){ $('modal').classList.add('hide'); S.cur = null; }
+
+async function sendEmail(){
+  const a = S.cur;
+  if (!a) return;
+  if (!a.email) return toast(fullName(a) + ' has no email address on file.', true);
+  const t = $('mTpl').value;
+  const need = tplNeeds(S.data.templates.find(x => x.name === t));
+  if (need.iv && (!$('mDate').value || !$('mTime').value)) return toast('Pick the interview date and time.', true);
+  if (need.sd && !$('mStart').value) return toast('Pick the start date.', true);
+  if (!confirm('Send "' + t + '" to ' + fullName(a) + ' at ' + a.email + '?')) return;
+  $('mSend').disabled = true; $('mSend').textContent = 'Sending…';
+  try {
+    const r = await call('send', {
+      row: a.row, id: a.id, template: t, subject: $('mSubj').value, message: $('mBody').value, status: $('mStatus').value,
+      interviewDate: need.iv ? $('mDate').value : '', interviewTime: $('mTime').value, location: $('mLoc').value, calendar: $('mCal').checked,
+      startDate: need.sd ? $('mStart').value : '', sender: store.get('hc_name')
+    });
+    closeModal();
+    toast(r.message);
+    await load(true);
+  } catch (e) { toast(e.message, true); }
+  $('mSend').disabled = false; $('mSend').textContent = 'Send Email';
+}
+
+async function load(quiet){
+  if (!quiet) $('main').classList.add('loading');
+  try {
+    S.data = await call('data');
+    render();
+  } catch (e) {
+    if (/passcode/i.test(e.message)) { signOut(e.message); return; }
+    toast(e.message, true);
+  }
+  $('main').classList.remove('loading');
+}
+
+function signOut(msg){
+  store.del('hc_pass');
+  $('app').classList.add('hide');
+  $('gate').classList.remove('hide');
+  $('gErr').textContent = msg || '';
+}
+
+$('gateForm').onsubmit = async e => {
+  e.preventDefault();
+  $('gErr').textContent = '';
+  $('gBtn').disabled = true; $('gBtn').textContent = 'Opening…';
+  store.set('hc_name', $('gName').value.trim(), true);
+  store.set('hc_pass', $('gPass').value.trim(), false);
+  try {
+    S.data = await call('data');
+    $('gate').classList.add('hide');
+    $('app').classList.remove('hide');
+    render();
+  } catch (err) {
+    store.del('hc_pass');
+    $('gErr').textContent = err.message === 'Failed to fetch' ? 'Could not reach the hiring system. Check your internet connection.' : err.message;
+  }
+  $('gBtn').disabled = false; $('gBtn').textContent = 'Open Dashboard';
+};
+
+$('refreshBtn').onclick = () => load();
+$('outBtn').onclick = () => signOut();
+$('chipX').onclick = () => setFilter('');
+$('q').oninput = e => { S.q = e.target.value; renderList(); };
+$('prog').onchange = e => { S.prog = e.target.value; renderList(); };
+$('mTpl').onchange = loadTpl;
+['mDate', 'mTime', 'mLoc', 'mStart'].forEach(id => $(id).addEventListener('input', paint));
+$('mSubj').addEventListener('input', () => edited.subj = true);
+$('mBody').addEventListener('input', () => edited.body = true);
+$('mClose').onclick = closeModal;
+$('mCancel').onclick = closeModal;
+$('mSend').onclick = sendEmail;
+$('modal').addEventListener('click', e => { if (e.target === $('modal')) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('modal').classList.contains('hide')) closeModal(); });
+
+const tip = $('tip');
+document.addEventListener('mousemove', e => {
+  const el = e.target.closest && e.target.closest('[data-tip]');
+  if (!el) { tip.classList.add('hide'); return; }
+  tip.textContent = el.dataset.tip;
+  tip.classList.remove('hide');
+  tip.style.left = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8) + 'px';
+  tip.style.top = (e.clientY + 16) + 'px';
+});
+
+$('gName').value = store.get('hc_name');
+if (store.get('hc_pass')) {
+  $('gate').classList.add('hide');
+  $('app').classList.remove('hide');
+  load();
+}
+</script>
+</body>
+</html>

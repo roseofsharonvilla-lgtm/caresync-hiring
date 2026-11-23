@@ -380,7 +380,7 @@ function fillText(text){
     'First Name': a.first, 'Last Name': a.last, 'Full Name': fullName(a), 'Position': a.position, 'Program': a.program,
     'Interview Date': fd($('mDate').value), 'Interview Time': ft($('mTime').value), 'Interview Location': $('mLoc').value,
     'Start Date': fd($('mStart').value), 'Sender Name': store.get('hc_name'), 'Facility': S.data.facility,
-    'Facility Phone': S.data.phone, 'Facility Address': S.data.address
+    'Facility Phone': S.data.phone, 'Facility Address': S.data.address, 'Booking Link': a.booking
   };
   return String(text || '').replace(/\{([^}]+)\}/g, (m, k) => map[k.trim()] ? map[k.trim()] : m);
 }

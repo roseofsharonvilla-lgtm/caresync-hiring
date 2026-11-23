@@ -81,7 +81,7 @@ main{max-width:1280px;margin:0 auto;padding:22px 24px 60px}
 .controls input,.controls select{padding:9px 12px;border:1.5px solid #DDD7C8;border-radius:10px;background:#fff}
 .controls input{width:220px}
 .apps{display:flex;flex-direction:column;gap:10px}
-.app{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:1.6fr 1fr auto;gap:14px;align-items:center}
+.app{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:1.1fr 1.5fr auto;gap:14px;align-items:center}
 .app .nm{font-weight:700;color:var(--navy);font-size:15px}
 .app .meta{color:var(--muted);font-size:12px}
 .pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#EEF1F7;color:var(--navy)}
@@ -96,6 +96,21 @@ main{max-width:1280px;margin:0 auto;padding:22px 24px 60px}
 .more .field select{padding:8px 10px}
 .more .info{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px 16px;font-size:12px}
 .more .info b{color:var(--muted);font-weight:500;display:block;font-size:11px}
+.steps{display:flex;align-items:center;gap:0;margin-top:8px}
+.st{display:flex;align-items:center;font-size:10px;color:var(--muted);font-weight:600;white-space:nowrap}
+.st i{width:10px;height:10px;border-radius:50%;background:#E5E1D6;display:inline-block;margin-right:4px;flex:none}
+.st.done i{background:var(--green)}
+.st.done{color:var(--green)}
+.st.now i{background:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
+.st.now{color:var(--gold-ink)}
+.st+.st::before{content:"";width:14px;height:2px;background:#E5E1D6;margin:0 5px}
+.btn-next{background:var(--green);color:#fff}
+.wait{font-size:12px;color:var(--gold-ink);background:var(--gold-soft);border-radius:9px;padding:8px 12px;font-weight:600}
+.quick{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.quick a{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;text-decoration:none;color:var(--navy);font-weight:600;font-size:12px;display:flex;flex-direction:column;gap:4px;transition:transform .1s,box-shadow .1s}
+.quick a:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(27,42,74,.12)}
+.quick a span{font-size:20px}
+.quick a small{color:var(--muted);font-weight:500;font-size:11px}
 .notes{grid-column:1/-1;font-size:12px;color:var(--muted);background:var(--cream);border-radius:8px;padding:8px 10px}
 .modal{position:fixed;inset:0;background:rgba(17,24,39,.55);display:grid;place-items:center;padding:16px;z-index:50}
 .sheet{background:#fff;border-radius:18px;width:100%;max-width:640px;max-height:92vh;overflow:auto;box-shadow:0 30px 60px rgba(0,0,0,.35)}
@@ -114,7 +129,7 @@ main{max-width:1280px;margin:0 auto;padding:22px 24px 60px}
 .tip{position:fixed;pointer-events:none;background:var(--navy);color:#fff;font-size:12px;padding:6px 10px;border-radius:8px;z-index:70;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.25)}
 .loading{opacity:.55;pointer-events:none}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 0 30px}
-@media(max-width:1000px){.tiles{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:1fr}.app{grid-template-columns:1fr}.acts{justify-content:flex-start}.more{grid-template-columns:1fr 1fr}.more .info{grid-template-columns:1fr 1fr}}
+@media(max-width:1000px){.quick{grid-template-columns:repeat(3,1fr)}.tiles{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:1fr}.app{grid-template-columns:1fr}.acts{justify-content:flex-start}.more{grid-template-columns:1fr 1fr}.more .info{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.tile .n{font-size:36px}.row2{grid-template-columns:1fr}.controls input{width:100%}}
 </style>
 </head>
@@ -141,6 +156,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 0 30px}
         <div class="sub" id="sub">When We Care… They Care.</div>
       </div>
       <div class="hbtns">
+        <a class="btn btn-ghost" id="hubLink" href="https://roseofsharonvilla-lgtm.github.io/caresync-hub/" target="_blank" rel="noopener" style="text-decoration:none">🏠 CAREsync Hub</a>
         <button class="btn btn-gold" id="refreshBtn">↻ Refresh</button>
         <a class="btn btn-ghost" id="sheetLink" target="_blank" rel="noopener" style="text-decoration:none">Open Sheet</a>
         <button class="btn btn-ghost" id="outBtn">Sign Out</button>
@@ -159,6 +175,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 0 30px}
         <div id="needs"></div>
       </div>
     </section>
+
+    <div class="panel" style="margin-top:18px"><h2>Hiring Steps &amp; Forms <span>open any form or booking page</span></h2><div class="quick" id="quick"></div></div>
 
     <div class="listhead">
       <h2 id="listTitle">All Applicants</h2>
@@ -240,6 +258,17 @@ function render(){
   const d = S.data;
   $('sub').textContent = 'When We Care… They Care.  ·  Updated ' + d.updated + '  ·  Signed in as ' + store.get('hc_name');
   $('sheetLink').href = d.sheetUrl;
+  const L = d.links || {};
+  if (L.hub) $('hubLink').href = L.hub;
+  const q = [
+    ['📅', 'Caregiver Interviews', 'Booking page', L.caregiver],
+    ['🩺', 'Nurse Interviews', 'Booking page', L.nurse],
+    ['🔎', 'Preliminary Background Check', 'Step 3 form', L.prelim],
+    ['🛡️', 'Full Background Screening', 'Step 5 form', L.full],
+    ['📊', 'Hiring Spreadsheet', 'Applicants & templates', d.sheetUrl],
+    ['🏠', 'CAREsync Hub', 'All Rose of Sharon tools', L.hub]
+  ].filter(x => x[3]);
+  $('quick').innerHTML = q.map(x => `<a href="${esc(x[3])}" target="_blank" rel="noopener"><span>${x[0]}</span>${esc(x[1])}<small>${esc(x[2])}</small></a>`).join('');
   const apps = d.applicants;
   const openings = d.needs.reduce((s, n) => s + n.still, 0);
   $('tiles').innerHTML = TILES.map(t => {
@@ -332,10 +361,10 @@ function renderList(){
     const open = S.open[a.id];
     return `<article class="app">
       <div><div class="nm">${esc(fullName(a))}</div><div class="meta">${esc(a.position)} · ${esc(a.program)} · ${esc(a.id)}</div><div class="meta">${esc(a.email || 'No email')} · ${esc(a.phone)}</div></div>
-      <div><span class="pill ${esc((a.status || '').replace(/\s/g, '-'))}">${esc(a.status || 'No status')}</span><div class="meta" style="margin-top:5px">Applied ${esc(fmtDate(a.applied))}${a.interview ? ' · Interview ' + esc(fmtDT(a.interview)) : ''}</div></div>
+      <div><span class="pill ${esc((a.status || '').replace(/\s/g, '-'))}">${esc(a.status || 'No status')}</span><div class="meta" style="margin-top:5px">Applied ${esc(fmtDate(a.applied))}${a.interview ? ' · Interview ' + esc(fmtDT(a.interview)) : ''}</div>${stepsHtml(a)}</div>
       <div class="acts">
-        <button class="btn btn-primary" data-act="Interview Invitation" data-id="${esc(a.id)}">📅 Invite to Interview</button>
-        <button class="btn btn-danger" data-act="Not Moving Forward" data-id="${esc(a.id)}">Not a Fit</button>
+        ${nextHtml(a)}
+        ${a.status === 'Hired' || a.status === 'Not Hired' || a.status === 'Withdrawn' ? '' : `<button class="btn btn-danger" data-act="Not Moving Forward" data-id="${esc(a.id)}">Not a Fit</button>`}
         <button class="btn btn-soft" data-act="" data-id="${esc(a.id)}">✉ Other Email</button>
         <button class="btn btn-soft" data-more="${esc(a.id)}">${open ? 'Less ▲' : 'Details ▼'}</button>
       </div>
@@ -351,8 +380,55 @@ function renderList(){
     </article>`;
   }).join('');
   $('apps').querySelectorAll('[data-act]').forEach(b => b.onclick = () => openModal(b.dataset.id, b.dataset.act));
+  $('apps').querySelectorAll('[data-setf]').forEach(b => b.onclick = () => quickField(b));
   $('apps').querySelectorAll('[data-more]').forEach(b => b.onclick = () => { S.open[b.dataset.more] = !S.open[b.dataset.more]; renderList(); });
   $('apps').querySelectorAll('select[data-field]').forEach(s => s.onchange = () => setField(s));
+}
+
+const STEPS = ['Applied', 'Interview', 'Prelim Check', 'Offer', 'Screening', 'Hired'];
+function sent(a, t){ return String(a.notes || '').indexOf(t + ' sent') > -1; }
+function stage(a){
+  if (a.status === 'Hired') return 6;
+  if (a.status === 'Offer Extended') return (sent(a, 'Background Check Next Steps') || a.background === 'Passed') ? 4 : 3;
+  if (a.status === 'Interviewed') return sent(a, 'Preliminary Background Check') ? 3 : 2;
+  if (a.status === 'Interview Scheduled') return 1;
+  return 0;
+}
+function stepsHtml(a){
+  if (a.status === 'Not Hired' || a.status === 'Withdrawn') return '';
+  const s = stage(a);
+  return '<div class="steps">' + STEPS.map((x, i) => `<span class="st ${i < s ? 'done' : i === s ? 'now' : ''}"><i></i>${x}</span>`).join('') + '</div>';
+}
+function nextStep(a){
+  const st = a.status;
+  if (st === 'New' || st === 'Reviewing' || st === 'Phone Screen') return { tpl: 'Interview Invitation', label: sent(a, 'Interview Invitation') ? '↻ Resend Interview Invite' : '➜ Next: Invite to Interview' };
+  if (st === 'Interview Scheduled') return { field: 'Status', value: 'Interviewed', label: '➜ Next: Mark Interviewed', alt: { tpl: 'Interview Reminder', label: 'Send Reminder' } };
+  if (st === 'Interviewed') return sent(a, 'Preliminary Background Check') ? { tpl: 'Job Offer', label: '➜ Next: Send Job Offer' } : { tpl: 'Preliminary Background Check', label: '➜ Next: Send Preliminary Check' };
+  if (st === 'Offer Extended') {
+    if (a.background === 'Passed') return { field: 'Status', value: 'Hired', label: '🎉 Next: Mark as Hired' };
+    if (sent(a, 'Background Check Next Steps')) return { wait: 'Waiting on background screening — update it under Details' };
+    return { tpl: 'Background Check Next Steps', label: '➜ Next: Send Background Screening' };
+  }
+  return null;
+}
+function nextHtml(a){
+  const n = nextStep(a);
+  if (!n) return '';
+  if (n.wait) return `<span class="wait">⏳ ${esc(n.wait)}</span>`;
+  const main = n.tpl ? `<button class="btn btn-next" data-act="${esc(n.tpl)}" data-id="${esc(a.id)}">${esc(n.label)}</button>` : `<button class="btn btn-next" data-setf="${esc(n.field)}" data-val="${esc(n.value)}" data-id="${esc(a.id)}" data-row="${a.row}">${esc(n.label)}</button>`;
+  const alt = n.alt ? `<button class="btn btn-soft" data-act="${esc(n.alt.tpl)}" data-id="${esc(a.id)}">${esc(n.alt.label)}</button>` : '';
+  return main + alt;
+}
+
+async function quickField(b){
+  const a = S.data.applicants.find(x => x.id === b.dataset.id);
+  if (!confirm('Set ' + b.dataset.setf + ' to "' + b.dataset.val + '" for ' + fullName(a) + '?')) return;
+  b.disabled = true;
+  try {
+    const r = await call('field', { row: b.dataset.row, id: b.dataset.id, field: b.dataset.setf, value: b.dataset.val });
+    toast(fullName(a) + ': ' + r.message);
+    await load(true);
+  } catch (e) { toast(e.message, true); b.disabled = false; }
 }
 
 function cap(s){ return String(s || '').toLowerCase().replace(/\b\w/g, c => c.toUpperCase()); }
@@ -380,7 +456,8 @@ function fillText(text){
     'First Name': a.first, 'Last Name': a.last, 'Full Name': fullName(a), 'Position': a.position, 'Program': a.program,
     'Interview Date': fd($('mDate').value), 'Interview Time': ft($('mTime').value), 'Interview Location': $('mLoc').value,
     'Start Date': fd($('mStart').value), 'Sender Name': store.get('hc_name'), 'Facility': S.data.facility,
-    'Facility Phone': S.data.phone, 'Facility Address': S.data.address, 'Booking Link': a.booking
+    'Facility Phone': S.data.phone, 'Facility Address': S.data.address,
+    'Booking Link': a.booking, 'Preliminary Check Link': (S.data.links || {}).prelim, 'Full Screening Link': (S.data.links || {}).full
   };
   return String(text || '').replace(/\{([^}]+)\}/g, (m, k) => map[k.trim()] ? map[k.trim()] : m);
 }

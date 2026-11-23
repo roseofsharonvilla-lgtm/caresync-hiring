@@ -111,6 +111,16 @@ main{max-width:1280px;margin:0 auto;padding:22px 24px 60px}
 .quick a:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(27,42,74,.12)}
 .quick a span{font-size:20px}
 .quick a small{color:var(--muted);font-weight:500;font-size:11px}
+.ivs{display:flex;flex-direction:column;gap:8px}
+.iv{display:grid;grid-template-columns:58px 1fr auto;gap:14px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.iv.past{opacity:.75}
+.cal{background:var(--navy);color:#fff;border-radius:10px;text-align:center;padding:6px 0;line-height:1.1}
+.cal b{display:block;font-size:20px}
+.cal small{font-size:10px;letter-spacing:1px;color:var(--gold-soft)}
+.iv .nm{font-weight:700;color:var(--navy)}
+.iv .meta{color:var(--muted);font-size:12px}
+.iv .acts .btn{padding:7px 11px;font-size:12px;border-radius:9px;text-decoration:none}
+.unm{margin-top:12px;background:var(--gold-soft);color:var(--gold-ink);border-radius:10px;padding:10px 12px;font-size:12px}
 .notes{grid-column:1/-1;font-size:12px;color:var(--muted);background:var(--cream);border-radius:8px;padding:8px 10px}
 .modal{position:fixed;inset:0;background:rgba(17,24,39,.55);display:grid;place-items:center;padding:16px;z-index:50}
 .sheet{background:#fff;border-radius:18px;width:100%;max-width:640px;max-height:92vh;overflow:auto;box-shadow:0 30px 60px rgba(0,0,0,.35)}
@@ -175,6 +185,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 0 30px}
         <div id="needs"></div>
       </div>
     </section>
+
+    <div class="panel" style="margin-top:18px"><h2>Upcoming Interviews <span>booked from your Google Calendar booking pages</span></h2><div id="ivs"></div></div>
 
     <div class="panel" style="margin-top:18px"><h2>Hiring Steps &amp; Forms <span>open any form or booking page</span></h2><div class="quick" id="quick"></div></div>
 
@@ -269,6 +281,7 @@ function render(){
     ['🏠', 'CAREsync Hub', 'All Rose of Sharon tools', L.hub]
   ].filter(x => x[3]);
   $('quick').innerHTML = q.map(x => `<a href="${esc(x[3])}" target="_blank" rel="noopener"><span>${x[0]}</span>${esc(x[1])}<small>${esc(x[2])}</small></a>`).join('');
+  renderInterviews(d);
   const apps = d.applicants;
   const openings = d.needs.reduce((s, n) => s + n.still, 0);
   $('tiles').innerHTML = TILES.map(t => {
@@ -328,6 +341,25 @@ function renderNeeds(needs){
     const lab = n.position + (n.shift ? ' · ' + n.shift : '');
     return `<div class="need-row pair" data-tip="${esc(lab)}: ${n.hired} hired of ${n.needed} needed"><span class="lab">${esc(lab)}</span><div><div class="track"><div class="fill" style="width:${n.needed / max * 100}%;background:var(--c2)"></div></div><div class="track" style="margin-top:2px"><div class="fill" style="width:${n.hired / max * 100}%;background:var(--c1)"></div></div></div><span class="val">${n.hired}/${n.needed}</span></div>`;
   }).join('');
+}
+
+function renderInterviews(d){
+  const iv = d.interviews || { upcoming: [], unmatched: [] };
+  const now = Date.now();
+  if (!iv.upcoming.length && !iv.unmatched.length) { $('ivs').innerHTML = '<div class="empty">No interviews booked yet. When a candidate picks a time from your booking page, it shows up here within about 10 minutes.</div>'; return; }
+  const rows = iv.upcoming.map(x => {
+    const t = new Date(x.when);
+    const past = t.getTime() < now;
+    const a = d.applicants.find(y => y.id === x.id) || {};
+    const day = `https://calendar.google.com/calendar/r/day/${t.getFullYear()}/${t.getMonth() + 1}/${t.getDate()}`;
+    const mark = a.status === 'Interview Scheduled' ? `<button class="btn btn-next" data-setf="Status" data-val="Interviewed" data-id="${esc(x.id)}" data-row="${a.row}">✓ Mark Interviewed</button>` : '';
+    return `<div class="iv ${past ? 'past' : ''}"><div class="cal"><small>${t.toLocaleDateString('en-US', { month:'short' }).toUpperCase()}</small><b>${t.getDate()}</b><small>${t.toLocaleDateString('en-US', { weekday:'short' }).toUpperCase()}</small></div>
+      <div><div class="nm">${esc(x.name)} <span class="meta">· ${esc(x.id)}</span></div><div class="meta">${t.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' })} · ${esc(x.position)} · ${esc(x.program)}</div><div class="meta">${esc(x.phone)} · ${esc(x.email)}</div></div>
+      <div class="acts">${mark}<a class="btn btn-soft" href="${day}" target="_blank" rel="noopener">📅 Open in Calendar</a></div></div>`;
+  }).join('');
+  const un = iv.unmatched.length ? `<div class="unm"><b>Booked, but not matched to an applicant:</b> ${iv.unmatched.map(x => esc(x.name || x.email) + ' (' + esc(x.email) + ') · ' + new Date(x.when).toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' })).join(' · ')}<br>They booked with an email that is not on the Applicants tab. Fix the email on their applicant row and it will match on the next sync.</div>` : '';
+  $('ivs').innerHTML = '<div class="ivs">' + rows + '</div>' + un;
+  $('ivs').querySelectorAll('[data-setf]').forEach(b => b.onclick = () => quickField(b));
 }
 
 function setFilter(f){
@@ -490,8 +522,9 @@ function openModal(id, tplName){
   $('mStatus').innerHTML = '<option value="">Leave status as is</option>' + S.data.lists.Status.map(s => `<option>${esc(s)}</option>`).join('');
   $('mTpl').value = tplName && S.data.templates.some(t => t.name === tplName) ? tplName : S.data.templates[0].name;
   const tm = new Date(Date.now() + 864e5);
-  $('mDate').value = tm.toISOString().slice(0, 10);
-  $('mLoc').value = S.data.facility + ', ' + S.data.address;
+  $('mDate').value = a.interview ? a.interview.slice(0, 10) : tm.toISOString().slice(0, 10);
+  if (a.interview && a.interview.length > 10) $('mTime').value = a.interview.slice(11, 16);
+  $('mLoc').value = /Interview (booked|rescheduled)/.test(a.notes || '') ? 'Google Meet (use the link in your calendar invite)' : S.data.facility + ', ' + S.data.address;
   $('mStart').value = '';
   loadTpl();
   $('modal').classList.remove('hide');
